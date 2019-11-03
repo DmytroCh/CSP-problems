@@ -144,13 +144,13 @@ def find_solutions(size, method):
 
     print("iteration number: " + str(COUNTER))
     print("Solutions number: " + str(len(result)))
-    print_result(result)
+    #print_result(result)
     #pprint(result)
 
 
 # enter to the program
 if __name__ == '__main__':
-    size = 8  # size of chessboard
+    size = 11  # size of chessboard
     method = 'b'  # 'b' - backtraking, 'f' - forwardchecking
     start_time = time.time()
     find_solutions(size, method)
