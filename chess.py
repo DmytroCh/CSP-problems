@@ -1,15 +1,19 @@
 import copy
+import random
 from pprint import pprint
 import time
 
 
 COUNTER = 0
+START_TIME = time.time()
 
 
 def create_variables(size):
     variables = list()
+    domain = list(range(0, size))
     for i in range(0, size):
-        variables.append([None, list(range(0, size))])
+        random.shuffle(domain)
+        variables.append([None, domain])
     return variables
 
 
@@ -62,15 +66,19 @@ def check_constraints(variables, position):
 
 # This method solves CSP problem by backtracking algorithm
 def backtracking_algorithm(variables, index, accumulator):
+    global COUNTER
     if are_values_assigned(variables):
         accumulator.append(variables)
+        print("iteration number: " + str(COUNTER))
+        print("solutions number: " + str(len(accumulator)))
+        print("Execution time: " + str(time.time() - START_TIME))
+        print("----------------")
     elif are_empty_domains(variables):
         return accumulator
     else:
         length = len(variables[index][1])
-        for d in range(0, length):
+        for d in range(0, length): # [wartość, [dziedzina]]
             variables[index][0] = variables[index][1][d]
-            global COUNTER
             COUNTER = COUNTER + 1
             #print(variables)
             variables1 = copy.deepcopy(variables)
@@ -93,15 +101,19 @@ def is_forward_way(variables, index):
 
 # This method solves CSP problem by backtracking algorithm
 def forwardchecking_algorithm(variables, index, accumulator):
+    global COUNTER
     if are_values_assigned(variables):
         accumulator.append(variables)
+        print("iteration number: " + str(COUNTER))
+        print("solutions number: " + str(len(accumulator)))
+        print("Execution time: " + str(time.time() - START_TIME))
+        print("----------------")
     elif are_empty_domains(variables):
         return accumulator
     else:
         length = len(variables[index][1])
         for d in range(0, length):
             variables[index][0] = variables[index][1][d]
-            global COUNTER
             COUNTER = COUNTER + 1
             #print(variables)
             variables1 = copy.deepcopy(variables)
@@ -131,12 +143,11 @@ def print_result(results):
         chessboards.append(chessboard)
 
 
-
-
 # size - size of chessboard
 # Methods: 'b' - backtraking, 'f' - forwardchecking
 def find_solutions(size, method):
     variables = create_variables(size)
+    print(variables)
     if method == 'b':
         result = backtracking_algorithm(variables, 0, [])
     if method == 'f':
@@ -150,8 +161,8 @@ def find_solutions(size, method):
 
 # enter to the program
 if __name__ == '__main__':
-    size = 11  # size of chessboard
-    method = 'b'  # 'b' - backtraking, 'f' - forwardchecking
+    size = 8  # size of chessboard
+    method = 'f'  # 'b' - backtraking, 'f' - forwardchecking
     start_time = time.time()
     find_solutions(size, method)
-    print("Execition time: " + str(time.time() - start_time))
+    print("Execition time: " + str(time.time() - START_TIME))

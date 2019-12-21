@@ -1,8 +1,10 @@
 import copy
+import random
 import time
 from pprint import pprint
 
 COUNTER = 0
+START_TIME = time.time()
 
 
 # This function generates fibonacci row till mentioned value
@@ -41,42 +43,51 @@ def check_forward(fibonacci, combination, number, position):
         return True
 
 
-
-def forwardchecking_algorithm(fibonacci, combination, number, accumulator):
+def forwardchecking_algorithm(fibonacci, combination, number, index, accumulator):
     global COUNTER
     COUNTER = COUNTER + 1
     actual_value = count_value(fibonacci, combination)
     if actual_value == number:
         if combination not in accumulator:
             accumulator.append(combination.copy())
+            print("iteration number: " + str(COUNTER))
+            print("solutions number: " + str(len(accumulator)))
+            print("Execution time: " + str(time.time() - START_TIME))
+            print("----------------")
     elif actual_value > number:
         return accumulator
     else:
-        for d in range(0, len(combination)):
+        for d in range(index, len(combination)):
             if combination[d] == 0:
                 combination1 = combination.copy()
                 combination1[d] = 1
                 is_forward = check_forward(fibonacci, combination1, number, d)
                 if is_forward:
-                    forwardchecking_algorithm(fibonacci, combination1, number, accumulator)
+                    forwardchecking_algorithm(fibonacci, combination1, number, d, accumulator)
     return accumulator
 
 
-def backtracking_algorithm(fibonacci, combination, number, accumulator):
+def backtracking_algorithm(fibonacci, combination, number, index, accumulator):
     global COUNTER
     COUNTER = COUNTER + 1
+    #print(COUNTER)
+    #print(combination)
     actual_value = count_value(fibonacci, combination)
     if actual_value == number:
         if combination not in accumulator:
             accumulator.append(combination.copy())
+            print("iteration number: " + str(COUNTER))
+            print("solutions number: " + str(len(accumulator)))
+            print("Execution time: " + str(time.time() - START_TIME))
+            print("----------------")
     elif actual_value > number:
         return accumulator
     else:
-        for d in range(0, len(combination)):
+        for d in range(index, len(combination)):
             if combination[d] == 0:
                 combination1 = combination.copy()
                 combination1[d] = 1
-                backtracking_algorithm(fibonacci, combination1, number, accumulator)
+                backtracking_algorithm(fibonacci, combination1, number, d, accumulator)
     return accumulator
 
 
@@ -92,23 +103,21 @@ def print_result(fibonacci, result):
 
 
 def find_solutions(value):
-    fibonacci = generate_fibonacci(value)[:-1]
+    fibonacci = generate_fibonacci(value)[2:-1]
+    random.shuffle(fibonacci)
     print("Fibonacci row", fibonacci)
     if method == 'b':
-        result = backtracking_algorithm(fibonacci, [0] * len(fibonacci), value, [])
+        result = backtracking_algorithm(fibonacci, [0] * len(fibonacci), value, 0, [])
     if method == 'f':
-        result = forwardchecking_algorithm(fibonacci, [0] * len(fibonacci), value, [])
-
+        result = forwardchecking_algorithm(fibonacci, [0] * len(fibonacci), value, 0, [])
     print("iteration number: " + str(COUNTER))
     print("Solutions number: " + str(len(result)))
     print_result(fibonacci, copy.deepcopy(result))
-    # pprint(result)
 
 
 # enter to the program
 if __name__ == '__main__':
-    value = 14  # number to be divided
-    method = 'b'  # 'b' - backtraking, 'f' - forwardchecking
-    start_time = time.time()
+    value = 64  # number to be divided
+    method = 'f'  # 'b' - backtraking, 'f' - forwardchecking
     find_solutions(value)
-    print("Execition time: " + str(time.time() - start_time))
+    print("Execition time: " + str(time.time() - START_TIME))
